@@ -5,10 +5,6 @@ pipeline {
         pollSCM('H/5 * * * *')
     }
 
-    environment {
-        DEVELOPER_EMAIL = "${env.GIT_AUTHOR_EMAIL}"
-    }
-
     stages {
         stage('Checkout') {
             steps {
@@ -38,21 +34,18 @@ pipeline {
 
     post {
         failure {
-            mail to: "srengty@gmail.com, ${env.GIT_AUTHOR_EMAIL}",
-                subject: "❌ Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                body: """
-                    Build failed!
-                    
-                    Job: ${env.JOB_NAME}
-                    Build: #${env.BUILD_NUMBER}
-                    Commit: ${env.GIT_COMMIT}
-                    Author: ${env.GIT_AUTHOR_EMAIL}
-                    
-                    Check details at: ${env.BUILD_URL}
-                """
-        }
-        success {
-            echo 'Build, test and deployment successful!'
+            script {
+                def gitEmail = sh(script: 'git log -1 --pretty=format:%ae', returnStdout: true).trim()
+                mail to: "srengty@gmail.com, ${gitEmail}",
+                    subject: "❌ Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                    body: """
+                        Build failed!
+                        Job: ${env.JOB_NAME}
+                        Build: #${env.BUILD_NUMBER}
+                        Commit: ${env.GIT_COMMIT}
+                        Check: ${env.BUILD_URL}
+                    """
+            }
         }
     }
 }
