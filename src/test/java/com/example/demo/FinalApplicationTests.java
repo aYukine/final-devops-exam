@@ -12,6 +12,7 @@ class FinalApplicationTests {
 	void contextLoads() {
 	}
 	
+	@Test
 	void failingTest() {
         assertEquals(1, 2);
     }
