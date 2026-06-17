@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: idcard-app-pod
+  labels:
+    app: idcard-manager
+spec:
+  containers:
+    - name: web-server
+      image: ubuntu:22.04
+      ports:
+        - containerPort: 8080
+          name: http-nginx
+        - containerPort: 2222
+          name: ssh-port
+    - name: mysql-db
+      image: mysql:8.0
+      env:
+        - name: MYSQL_DATABASE
+          value: "A-PHOLL_Chanphayuk-db"
+        - name: MYSQL_ROOT_PASSWORD
+          value: "Hello@123"
+      ports:
+        - containerPort: 3306
+          name: mysql-port
