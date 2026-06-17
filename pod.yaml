@@ -7,14 +7,17 @@ metadata:
 spec:
   containers:
     - name: web-server
-      image: ubuntu:22.04
+      image: final-web-server:latest
+      imagePullPolicy: Never
       ports:
         - containerPort: 8080
           name: http-nginx
         - containerPort: 2222
           name: ssh-port
+
     - name: mysql-db
       image: mysql:8.0
+      args: ["--default-authentication-plugin=mysql_native_password"]
       env:
         - name: MYSQL_DATABASE
           value: "A-PHOLL_Chanphayuk-db"
