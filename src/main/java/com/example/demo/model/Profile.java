@@ -29,5 +29,6 @@ public class Profile {
     @Column(columnDefinition = "LONGBLOB")
     private byte[] photo; 
 
+    @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 }
