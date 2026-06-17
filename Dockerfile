@@ -24,4 +24,4 @@ COPY nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 8443 2222
 
-CMD service ssh start && nginx && ./gradlew bootRun
+CMD service ssh start && nginx && sleep 10 && ./gradlew clean bootRun
