@@ -30,6 +30,9 @@
         chdir: /app
 
     - name: Restart Spring Boot
-      command: bash -c "pkill -f 'java.*final' || true; nohup ./gradlew bootRun > /app/boot.log 2>&1 &"
+      shell: "pkill -f 'java.*final' || true; sleep 2; nohup ./gradlew bootRun > /app/boot.log 2>&1 &"
       args:
         chdir: /app
+      async: 10
+      poll: 0
+      ignore_errors: yes
