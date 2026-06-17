@@ -1,0 +1,35 @@
+---
+- name: Deploy to Web Server
+  hosts: webserver
+  become: yes
+
+  tasks:
+    - name: Reset local git changes
+      command: git reset --hard HEAD
+      args:
+        chdir: /app
+
+    - name: Git pull latest
+      command: git pull origin Ex2
+      args:
+        chdir: /app
+
+    - name: Build with Gradle
+      command: ./gradlew build -x test
+      args:
+        chdir: /app
+
+    - name: Run tests
+      command: ./gradlew test
+      args:
+        chdir: /app
+
+    - name: Backup MySQL database
+      command: bash -c "mysqldump -h mysql-db -u root -pHello@123 A-PHOLL_Chanphayuk-db > /app/backup.sql"
+      args:
+        chdir: /app
+
+    - name: Restart Spring Boot
+      command: bash -c "pkill -f 'java.*final' || true; nohup ./gradlew bootRun > /app/boot.log 2>&1 &"
+      args:
+        chdir: /app

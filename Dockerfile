@@ -9,8 +9,9 @@ RUN apt-get update && apt-get install -y \
     curl \
     openjdk-25-jdk \
     php-cli \
+    mysql-client \
     && rm -rf /var/lib/apt/lists/*
-
+    
 RUN mkdir /var/run/sshd
 RUN echo 'root:Hello@123' | chpasswd
 RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
