@@ -2,7 +2,7 @@ name: Build, Test and Deploy
 
 on:
   push:
-    branches: [ Ex4 ]
+    branches: [ Ex5 ]
 
 jobs:
   build-test-deploy:
