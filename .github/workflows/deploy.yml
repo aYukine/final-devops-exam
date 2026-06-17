@@ -1,0 +1,49 @@
+name: Build, Test and Deploy
+
+on:
+  push:
+    branches: [ Ex4 ]
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Build
+        run: ./gradlew build -x test
+
+      - name: Test
+        run: ./gradlew test
+
+      - name: Install Ansible
+        run: sudo apt-get update && sudo apt-get install -y ansible
+
+      - name: Deploy with Ansible
+        run: ansible-playbook -i inventory.ini playbook.yml
+
+      - name: Send failure email
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.GMAIL_USERNAME }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          subject: "❌ Build Failed: ${{ github.repository }} - ${{ github.sha }}"
+          to: srengty@gmail.com, ${{ github.event.pusher.email }}
+          from: ${{ secrets.GMAIL_USERNAME }}
+          body: |
+            Build failed!
+            Repo: ${{ github.repository }}
+            Commit: ${{ github.sha }}
+            Author: ${{ github.event.pusher.email }}
+            Check: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
