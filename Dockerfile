@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y \
     git \
     nginx \
     curl \
-    openjdk-21-jdk \
+    openjdk-25-jdk \
     php-cli \
     && rm -rf /var/lib/apt/lists/*
 
@@ -18,8 +18,7 @@ RUN sed -i 's/#Port 22/Port 2222/' /etc/ssh/sshd_config
 
 WORKDIR /app
 
-# Clone your project's Ex1 branch directly inside the container environment
-RUN git clone -b Ex1 https://github.com/aYukine/final-devops-exam.git .
+RUN git clone -b Ex2 https://github.com/aYukine/final-devops-exam.git .
 
 COPY nginx.conf /etc/nginx/nginx.conf
 
