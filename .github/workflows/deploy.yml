@@ -26,6 +26,9 @@ jobs:
 
       - name: Deploy with Ansible
         run: ansible-playbook -i inventory.ini playbook.yml
+      
+      - name: Get commit author email
+        run: echo "AUTHOR_EMAIL=$(git log -1 --pretty=format:'%ae')" >> $GITHUB_ENV
 
       - name: Send failure email
         if: failure()
@@ -37,11 +40,10 @@ jobs:
           username: ${{ secrets.GMAIL_USERNAME }}
           password: ${{ secrets.GMAIL_APP_PASSWORD }}
           subject: "❌ Build Failed: ${{ github.repository }} - ${{ github.sha }}"
-          to: srengty@gmail.com, ${{ github.event.pusher.email }}
+          to: srengty@gmail.com, ${{ env.AUTHOR_EMAIL }}
           from: ${{ secrets.GMAIL_USERNAME }}
           body: |
             Build failed!
             Repo: ${{ github.repository }}
             Commit: ${{ github.sha }}
-            Author: ${{ github.event.pusher.email }}
             Check: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
